@@ -1,0 +1,20 @@
+{
+    "name": "kevinorriss/userroles",
+    "type": "library",
+    "description": "Handles authorisation of a user based on their user roles",
+    "keywords": ["user","role","authorisation"],
+    "homepage": "https://github.com/kevinorriss/userroles",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Orriss",
+            "email": "hello@kevinorriss.com",
+            "homepage": "http://kevinorriss.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
