@@ -1,11 +1,18 @@
 <?php
 
-namespace KevinOrriss\UserRoles;
+namespace KevinOrriss\UserRoles\App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
+    /**
+     * When deleting the model, it is not actually removed from the database, instead
+     * the deleted_at column has the current time set
+     */
+    use SoftDeletes;
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -19,4 +26,15 @@ class Role extends Model
      * @var string
      */
     protected $dateFormat = 'Y-m-d H:i:sO';
+
+    /**
+     * Returns the RoleGroup objects that this Role belongs to.
+     * This is not recursive
+     *
+     * @return RoleGroup[]
+     */
+    public function roleGroups()
+    {
+        return $this->belongsToMany('KevinOrriss\UserRoles\App\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')->withTimestamps();
+    }
 }
