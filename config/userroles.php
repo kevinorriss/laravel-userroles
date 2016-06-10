@@ -23,6 +23,6 @@ return [
     | be used.
     |
     */
-	'user_column' => env('user_column', 'id')
+	'user_column' => env('USER_COLUMN', 'id')
 
 ];

@@ -25,7 +25,54 @@ class CreateRoleGroupGroupsTable extends Migration
             $table->unique(['role_group_id', 'sub_role_group_id']);
         });
 
-        DB::statement('ALTER TABLE role_group_groups ADD CONSTRAINT self_reference CHECK(role_group_id <> sub_role_group_id)');
+        if (DB::connection()->getDriverName() == 'pgsql')
+        {
+            DB::statement('ALTER TABLE role_group_groups ADD CONSTRAINT self_reference CHECK(role_group_id <> sub_role_group_id)');
+
+            DB::statement(
+                "CREATE FUNCTION role_group_groups_infinite_loop_check() RETURNS trigger AS
+                $$
+                DECLARE
+                    has_loop BOOLEAN;
+                BEGIN
+                    WITH RECURSIVE search_graph(role_group_id, sub_role_group_id, depth, path, found) AS
+                    (
+                        SELECT 
+                            t.role_group_id,
+                            t.sub_role_group_id, 
+                            1,
+                            ARRAY[t.role_group_id],
+                            FALSE
+                        FROM role_group_groups t
+                        UNION ALL
+                        SELECT 
+                            t.role_group_id, 
+                            t.sub_role_group_id, 
+                            sg.depth + 1,
+                            path || t.role_group_id,
+                            t.role_group_id = ANY(path)
+                        FROM role_group_groups t, search_graph sg
+                        WHERE t.role_group_id = sg.sub_role_group_id 
+                        AND NOT found
+                    )
+                    SELECT INTO has_loop 
+                        COUNT(*) > 0 
+                    FROM search_graph 
+                    WHERE found;
+
+                    IF (has_loop) THEN
+                        RAISE EXCEPTION 'Infinite loop found in table: role_group_groups';
+                    END IF;
+
+                    RETURN NEW;
+                END;
+                $$
+                LANGUAGE plpgsql");
+
+            DB::statement(
+                "CREATE TRIGGER role_group_groups_after_insert_update AFTER INSERT OR UPDATE ON role_group_groups
+                    FOR EACH ROW EXECUTE PROCEDURE role_group_groups_infinite_loop_check()");
+        }
     }
 
     /**

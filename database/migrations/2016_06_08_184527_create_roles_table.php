@@ -22,8 +22,11 @@ class CreateRolesTable extends Migration
             $table->index('deleted_at');
         });
 
-        DB::statement('ALTER TABLE roles ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
-        DB::statement('ALTER TABLE roles ADD CONSTRAINT description_length CHECK (length(description) > 10)');
+        if (DB::connection()->getDriverName() == 'pgsql')
+        {
+            DB::statement('ALTER TABLE roles ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
+            DB::statement('ALTER TABLE roles ADD CONSTRAINT description_length CHECK (length(description) > 10)');
+        }
     }
 
     /**

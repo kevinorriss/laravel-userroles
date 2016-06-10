@@ -36,7 +36,7 @@ class RoleGroup extends Model
     public function roles()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'role_group_roles', 'role_group_id', 'role_id')
-                    ->whereNull('role_group_roles.deleted_at');
+            ->whereNull('role_group_roles.deleted_at');
     }
 
     /**
@@ -48,7 +48,7 @@ class RoleGroup extends Model
     public function parents()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'sub_role_group_id', 'role_group_id')
-                    ->whereNull('role_group_groups.deleted_at');
+            ->whereNull('role_group_groups.deleted_at');
     }
 
     /**
@@ -60,6 +60,32 @@ class RoleGroup extends Model
     public function children()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'role_group_id', 'sub_role_group_id')
-                    ->whereNull('role_group_groups.deleted_at');
+            ->whereNull('role_group_groups.deleted_at');
+    }
+
+    /**
+     * Returns if the Role Group contains the given Role. This 
+     * function is recursive and searches for the Role within
+     * the sub Role Groups.
+     *
+     * @param KevinOrriss\UserRoles\Models\Role $role
+     *
+     * @return boolean
+     */
+    public function hasRole(Role $role)
+    {
+        // check if this Role Group has the given role
+        $can = count($this->roles()->where('role_id', $role->id)->first()) > 0;
+        if ($can) { return TRUE; }
+
+        // recursively call this function on all sub Role Groups
+        $children = $this->children()->get();
+        foreach($children as $child)
+        {
+            if ($child->hasRole($role)) { return TRUE; }
+        }
+
+        // role not found
+        return FALSE;
     }
 }

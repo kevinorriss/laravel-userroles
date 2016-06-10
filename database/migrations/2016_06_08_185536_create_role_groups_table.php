@@ -21,8 +21,10 @@ class CreateRoleGroupsTable extends Migration
             $table->index('deleted_at');
         });
 
-        // contraints
-        DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
+        if (DB::connection()->getDriverName() == 'pgsql')
+        {
+            DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
+        }
     }
 
     /**

@@ -36,6 +36,6 @@ class Role extends Model
     public function roleGroups()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')
-                    ->whereNull('role_group_roles.deleted_at');
+            ->whereNull('role_group_roles.deleted_at');
     }
 }
