@@ -17,9 +17,9 @@ class UserRolesServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations/' => database_path('migrations')
         ]);
 
-        $this->publishes([
+        /*$this->publishes([
             __DIR__.'/models/' => app_path()
-        ]);
+        ]);*/
     }
 
     /**
