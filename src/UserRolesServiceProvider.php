@@ -30,7 +30,7 @@ class UserRolesServiceProvider extends ServiceProvider
     public function register()
     {
         include __DIR__ . '/routes.php';
-        $this->app->make('KevinOrriss\UserRoles\App\Http\Controllers\RoleController');
-        $this->app->make('KevinOrriss\UserRoles\App\Http\Controllers\RoleGroupController');
+        $this->app->make('KevinOrriss\UserRoles\Controllers\RoleController');
+        $this->app->make('KevinOrriss\UserRoles\Controllers\RoleGroupController');
     }
 }
