@@ -70,7 +70,7 @@ class CreateRoleGroupGroupsTable extends Migration
                 LANGUAGE plpgsql");
 
             DB::statement(
-                "CREATE TRIGGER role_group_groups_after_insert_update AFTER INSERT OR UPDATE ON role_group_groups
+                "CREATE CONSTRAINT TRIGGER role_group_groups_after_insert_update AFTER INSERT OR UPDATE ON role_group_groups DEFERRABLE INITIALLY IMMEDIATE
                     FOR EACH ROW EXECUTE PROCEDURE role_group_groups_infinite_loop_check()");
         }
     }
