@@ -35,6 +35,6 @@ class Role extends Model
      */
     public function roleGroups()
     {
-        return $this->belongsToMany('KevinOrriss\UserRoles\App\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')->withTimestamps();
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')->withTimestamps();
     }
 }

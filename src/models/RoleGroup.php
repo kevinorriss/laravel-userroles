@@ -35,7 +35,7 @@ class RoleGroup extends Model
      */
     public function roles()
     {
-        return $this->belongsToMany('KevinOrriss\UserRoles\App\Role', 'role_group_roles', 'role_group_id', 'role_id')->withTimestamps();
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'role_group_roles', 'role_group_id', 'role_id')->withTimestamps();
     }
 
     /**
@@ -46,7 +46,7 @@ class RoleGroup extends Model
      */
     public function parents()
     {
-        return $this->belongsToMany('KevinOrriss\UserRoles\App\RoleGroup', 'role_group_groups', 'sub_role_group_id', 'role_group_id')->withTimestamps();
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'sub_role_group_id', 'role_group_id')->withTimestamps();
     }
 
     /**
@@ -57,6 +57,6 @@ class RoleGroup extends Model
      */
     public function children()
     {
-        return $this->belongsToMany('KevinOrriss\UserRoles\App\RoleGroup', 'role_group_groups', 'role_group_id', 'sub_role_group_id')->withTimestamps();
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'role_group_id', 'sub_role_group_id')->withTimestamps();
     }
 }

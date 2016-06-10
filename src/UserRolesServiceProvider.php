@@ -29,8 +29,8 @@ class UserRolesServiceProvider extends ServiceProvider
         include __DIR__ . '/routes.php';
 
         // models
-        $this->app->make('KevinOrriss\UserRoles\Models\Role');
-        $this->app->make('KevinOrriss\UserRoles\Models\RoleGroup');
+        //$this->app->make('KevinOrriss\UserRoles\Models\Role');
+        //$this->app->make('KevinOrriss\UserRoles\Models\RoleGroup');
 
         // controllers
         $this->app->make('KevinOrriss\UserRoles\Controllers\RoleController');
