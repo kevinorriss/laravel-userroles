@@ -1,4 +1,4 @@
 <?php
 
-Route::resource('role', 'RoleController');
-Route::resource('role_group', 'RoleGroupController');
+Route::resource('role', 'KevinOrriss\UserRoles\Controllers\RoleController');
+Route::resource('role_group', 'KevinOrriss\UserRoles\Controllers\RoleGroupController');
