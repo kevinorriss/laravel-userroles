@@ -58,7 +58,7 @@ class CreateRoleGroupGroupsTable extends Migration
                     SELECT INTO has_loop 
                         COUNT(*) > 0 
                     FROM search_graph 
-                    WHERE found;
+                    WHERE search_graph.found;
 
                     IF (has_loop) THEN
                         RAISE EXCEPTION 'Infinite loop found in table: role_group_groups';
