@@ -1,4 +1,4 @@
 <?php
 
-Route::resource('role', ['uses' => 'KevinOrriss\UserRoles\Controllers\RoleController', 'middleware' => ['web', 'auth']]);
-Route::resource('role_group', ['uses' => 'KevinOrriss\UserRoles\Controllers\RoleGroupController', 'middleware' => ['web', 'auth']]);
+Route::resource('role', 'KevinOrriss\UserRoles\Controllers\RoleController');
+Route::resource('role_group', 'KevinOrriss\UserRoles\Controllers\RoleGroupController');

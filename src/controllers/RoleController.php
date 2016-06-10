@@ -10,6 +10,17 @@ use App\Http\Controllers\Controller;
 class RoleController extends Controller
 {
     /**
+     * Instantiate a new RoleController instance
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('web');
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
