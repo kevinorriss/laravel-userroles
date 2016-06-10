@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateUserRolesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->foreign('user_id')->references(config('userroles.user_column'))->on(config('userroles.user_table'));
+            $table->integer('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestampTz('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestampTz('deleted_at')->nullable();
+            $table->unique(['user_id', 'role_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('user_roles');
+    }
+}
