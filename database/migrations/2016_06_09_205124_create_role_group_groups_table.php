@@ -53,7 +53,7 @@ class CreateRoleGroupGroupsTable extends Migration
                             t.role_group_id = ANY(path)
                         FROM role_group_groups t, search_graph sg
                         WHERE t.role_group_id = sg.sub_role_group_id 
-                        AND NOT found
+                        AND NOT sg.found
                     )
                     SELECT INTO has_loop 
                         COUNT(*) > 0 
