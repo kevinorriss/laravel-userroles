@@ -16,10 +16,6 @@ class UserRolesServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../database/migrations/' => database_path('migrations')
         ]);
-
-        /*$this->publishes([
-            __DIR__.'/models/' => app_path()
-        ]);*/
     }
 
     /**
@@ -29,7 +25,14 @@ class UserRolesServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // routes
         include __DIR__ . '/routes.php';
+
+        // models
+        $this->app->make('KevinOrriss\UserRoles\Models\Role');
+        $this->app->make('KevinOrriss\UserRoles\Models\RoleGroup');
+
+        // controllers
         $this->app->make('KevinOrriss\UserRoles\Controllers\RoleController');
         $this->app->make('KevinOrriss\UserRoles\Controllers\RoleGroupController');
     }
