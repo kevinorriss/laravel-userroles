@@ -15,6 +15,7 @@ class CreateRoleGroupsTable extends Migration
         Schema::create('role_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->text('name')->unique();
+            $table->text('description');
             $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestampTz('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestampTz('deleted_at')->nullable();
@@ -24,6 +25,7 @@ class CreateRoleGroupsTable extends Migration
         if (DB::connection()->getDriverName() == 'pgsql')
         {
             DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
+            DB::statement('ALTER TABLE role_groups ADD CONSTRAINT description_length CHECK (length(description) > 10)');
         }
     }
 
