@@ -41,7 +41,7 @@ trait RoleUser
      *
      * @return boolean
      */
-    protected function hasRole($role)
+    public function hasRole($role)
     {
         // handle the parameter type
         if (is_string($role))
