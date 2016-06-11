@@ -2,6 +2,7 @@
 
 namespace KevinOrriss\UserRoles\Models;
 
+use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -86,15 +87,29 @@ class RoleGroup extends Model
      */
     public function hasRole(Role $role)
     {
+        // handle the parameter type
+        if (is_string($role))
+        {
+            $search_role = Role::where('name', $role)->firstOrFail();
+        }
+        else if (is_a($role, "KevinOrriss\UserRoles\Models\Role"))
+        {
+            $search_role = $role;
+        }
+        else
+        {
+            throw new InvalidArgumentException('role must be a Role instance or string of the role name');
+        }
+
         // check if this Role Group has the given role
-        $can = count($this->roles()->where('roles.id', $role->id)->first()) > 0;
+        $can = count($this->roles()->where('roles.id', $search_role->id)->first()) > 0;
         if ($can) { return TRUE; }
 
         // recursively call this function on all sub Role Groups
         $children = $this->children()->get();
         foreach($children as $child)
         {
-            if ($child->hasRole($role)) { return TRUE; }
+            if ($child->hasRole($search_role)) { return TRUE; }
         }
 
         // role not found
