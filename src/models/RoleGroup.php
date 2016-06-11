@@ -31,7 +31,7 @@ class RoleGroup extends Model
      * Returns the Role objects that belong to this RoleGroup.
      * This is not recursive
      *
-     * @return Role[]
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
@@ -40,10 +40,22 @@ class RoleGroup extends Model
     }
 
     /**
+     * Returns the Model objects, specified in config('userroles.user_model'), that this Role belongs to.
+     * This is not recursive
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(config('userroles.user_model'), 'user_role_groups', 'role_group_id', 'user_id')
+            ->whereNull('user_role_groups.deleted_at');
+    }
+
+    /**
      * Returns the RoleGroup objects that this RoleGroup belongs to.
      * This is not recursive
      *
-     * @return RoleGroup[]
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function parents()
     {
@@ -55,7 +67,7 @@ class RoleGroup extends Model
      * Returns the RoleGroup objects that belong to this RoleGroup.
      * This is not recursive
      *
-     * @return RoleGroup[]
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function children()
     {
@@ -75,7 +87,7 @@ class RoleGroup extends Model
     public function hasRole(Role $role)
     {
         // check if this Role Group has the given role
-        $can = count($this->roles()->where('role_id', $role->id)->first()) > 0;
+        $can = count($this->roles()->where('roles.id', $role->id)->first()) > 0;
         if ($can) { return TRUE; }
 
         // recursively call this function on all sub Role Groups

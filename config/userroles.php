@@ -11,7 +11,7 @@ return [
     | then the default 'users' table will be used.
     |
     */
-	'user_table' => env('USER_TABLE', 'users'),
+	'user_table' => env('USER_ROLES_USER_TABLE', 'users'),
 
 	/*
     |--------------------------------------------------------------------------
@@ -23,6 +23,18 @@ return [
     | be used.
     |
     */
-	'user_column' => env('USER_COLUMN', 'id')
+	'user_column' => env('USER_ROLES_USER_COLUMN', 'id'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default model class for the user
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the class used as the user model. This class is 
+    | called from the Role and RoleGroup models. If left then the default class
+    | App\User will be used.
+    |
+    */
+    'user_model' => env('USER_ROLES_USER_MODEL', 'App\User')
 
 ];

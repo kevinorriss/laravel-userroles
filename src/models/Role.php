@@ -31,11 +31,23 @@ class Role extends Model
      * Returns the RoleGroup objects that this Role belongs to.
      * This is not recursive
      *
-     * @return RoleGroup[]
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roleGroups()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')
             ->whereNull('role_group_roles.deleted_at');
+    }
+
+    /**
+     * Returns the Model objects, specified in config('userroles.user_model'), that this Role belongs to.
+     * This is not recursive
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(config('userroles.user_model'), 'user_roles', 'role_id', 'user_id')
+            ->whereNull('user_roles.deleted_at');
     }
 }
