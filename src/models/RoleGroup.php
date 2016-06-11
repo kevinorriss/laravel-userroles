@@ -41,6 +41,35 @@ class RoleGroup extends Model
     }
 
     /**
+     * Returns the Role objects that belong to this RoleGroup.
+     * This is recursive
+     *
+     * @return Role[]
+     */
+    public function allRoles()
+    {
+        // array to return
+        $all_roles = array();
+
+        // local roles
+        $roles = $this->roles()->get();
+        foreach($roles as $role)
+        {
+            $all_roles[$role->name] = $role;
+        }
+
+        // children roles
+        $children = $this->children()->get();
+        foreach($children as $child)
+        {
+            $all_roles += $child->allRoles();
+        }
+
+        // return all roles
+        return $all_roles;
+    }
+
+    /**
      * Returns the Model objects, specified in config('userroles.user_model'), that this Role belongs to.
      * This is not recursive
      *
@@ -81,35 +110,58 @@ class RoleGroup extends Model
      * function is recursive and searches for the Role within
      * the sub Role Groups.
      *
-     * @param KevinOrriss\UserRoles\Models\Role $role
+     * @param string | string[] | Role | Role[] $role
      *
      * @return boolean
      */
-    public function hasRole(Role $role)
+    public function hasRole($role)
     {
+        $names = array();
+
         // handle the parameter type
         if (is_string($role))
         {
-            $search_role = Role::where('name', $role)->firstOrFail();
+            $names[] = $role;
         }
         else if (is_a($role, "KevinOrriss\UserRoles\Models\Role"))
         {
-            $search_role = $role;
+            $names[] = $role->name;
+        }
+        else if (is_array($role))
+        {
+            foreach($role as $value)
+            {
+                if (is_string($role))
+                {
+                    $names[] = $value;
+                }
+                else if (is_a($role, "KevinOrriss\UserRoles\Models\Role"))
+                {
+                    $names[] = $value->name;
+                }
+                else
+                {
+                    throw new InvalidArgumentException('Parameter [$role] array can contain only Role instances or strings of role names');
+                }
+            }
         }
         else
         {
-            throw new InvalidArgumentException('role must be a Role instance or string of the role name');
+            throw new InvalidArgumentException('Parameter [$role] must be a Role instance or string of the role name');
         }
 
+        // remove duplicates
+        $names = array_unique($names);
+
         // check if this Role Group has the given role
-        $can = count($this->roles()->where('roles.id', $search_role->id)->first()) > 0;
+        $can = count($this->roles()->whereIn('roles.name', $names)->first()) > 0;
         if ($can) { return TRUE; }
 
         // recursively call this function on all sub Role Groups
         $children = $this->children()->get();
         foreach($children as $child)
         {
-            if ($child->hasRole($search_role)) { return TRUE; }
+            if ($child->hasRole($names)) { return TRUE; }
         }
 
         // role not found
