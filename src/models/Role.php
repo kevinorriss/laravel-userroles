@@ -14,6 +14,19 @@ class Role extends Model
     use SoftDeletes;
 
     /**
+     * The validation rules for a Role instance
+     */
+    const RULES = [
+        'name' => 'bail|required|min:3|max:20|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name',
+        'description' => 'bail|required|min:10'];
+
+    /**
+     * Custom messages for certain validation checks
+     */
+    const MESSAGES = [
+        'name.regex' => 'Name can contain only lower case a-z seperated by single underscores'];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
