@@ -99,7 +99,15 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        return "TODO: show";
+        // check user has role
+        if (!Auth::user()->hasRole('role_browse'))
+        {
+            return redirect(url('/'));
+        }
+
+        // get the role and display
+        $role = Role::findOrFail($id);
+        return view('userroles.roles.show')->with('role', $role);
     }
 
     /**
@@ -110,7 +118,15 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        return "TODO: edit";
+        // check user has role
+        if (!Auth::user()->hasRole('role_edit'))
+        {
+            return redirect(url('/'));
+        }
+
+        // get the role and display
+        $role = Role::findOrFail($id);
+        return view('userroles.roles.edit')->with('role', $role);
     }
 
     /**

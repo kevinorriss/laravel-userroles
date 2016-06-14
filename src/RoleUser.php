@@ -89,6 +89,8 @@ trait RoleUser
      *
      * @param string | string[] | Role | Role[] $role
      *
+     * @throws InvalidArgumentException
+     *
      * @return boolean
      */
     public function hasRole($role)
@@ -142,5 +144,30 @@ trait RoleUser
             if (array_key_exists($name, $this->roles)) { return TRUE; }
         }
         return FALSE;
+    }
+
+    /**
+     * Checks the user has the given role name, if the user does not, then
+     * a 403 page will be displayed
+     *
+     * @param string $role
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
+     */
+    public function checkRole($role)
+    {
+        // validate the parameter
+        if (!is_string($role))
+        {
+            throw new InvalidArgumentException('Parameter [$role] must be a string of the role name');
+        }
+
+        // display a 403 page if the user does not have the given role
+        if (!$this->hasRole($role))
+        {
+            App::abort(403, 'You do not have the permissions to complete this request.');
+        }
     }
 }
