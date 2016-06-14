@@ -32,7 +32,7 @@ class RoleController extends Controller
         $per_col = (float)$count/3.0;
         $col1_start = 0;
         $col2_start = ceil($per_col);
-        $col3_start = $col2_start + floor($per_col);
+        $col3_start = $col2_start + ceil($per_col);
 
         // pass the variables to the view
         return view('userroles.roles.browse')
