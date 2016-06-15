@@ -20,11 +20,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        // check user has role
-        if (!Auth::user()->hasRole('role_browse'))
-        {
-            return redirect(url('/'));
-        }
+        Auth::user()->checkRole('role_browse');
 
         // get the roles and calculate column row numbers
         $roles = Role::orderBy('name', 'asc')->get();
@@ -50,12 +46,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        // check user has role
-        if (!Auth::user()->hasRole('role_create'))
-        {
-            return redirect(url('/'));
-        }
-
+        Auth::user()->checkRole('role_create');
         return view('userroles.roles.create');
     }
 
@@ -67,14 +58,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        // check user has role
-        if (!Auth::user()->hasRole('role_create'))
-        {
-            return redirect(url('/'));
-        }
+        Auth::user()->checkRole('role_create');
 
         // validate the request
-        $validator = Validator::make($request->all(), Role::RULES, Role::MESSAGES);
+        $validator = Validator::make($request->all(), Role::rules(), Role::messages());
         if ($validator->fails())
         {
             return redirect(route('roles.create'))->withErrors($validator)->withInput();
@@ -99,11 +86,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        // check user has role
-        if (!Auth::user()->hasRole('role_browse'))
-        {
-            return redirect(url('/'));
-        }
+        Auth::user()->checkRole('role_browse');
 
         // get the role and display
         $role = Role::findOrFail($id);
@@ -118,11 +101,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        // check user has role
-        if (!Auth::user()->hasRole('role_edit'))
-        {
-            return redirect(url('/'));
-        }
+        Auth::user()->checkRole('role_edit');
 
         // get the role and display
         $role = Role::findOrFail($id);
@@ -138,7 +117,22 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return "TODO: update";
+        Auth::user()->checkRole('role_edit');
+
+        $role = Role::findOrFail($id);
+        
+        $validator = Validator::make($request->all(), Role::rules($role->id), Role::messages());
+        if ($validator->fails())
+        {
+            return redirect(route('roles.edit'), $role->id)->withErrors($validator)->withInput();
+        }
+
+        $role->name = $request->input('name');
+        $role->description = $request->input('description');
+        $role->save();
+
+        Session::flash('success', 'Changes saved successfully');
+        return redirect(route('roles.show', $role->id));
     }
 
     /**
@@ -149,6 +143,11 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        return "TODO: destroy";
+        Auth::user()->checkRole('role_delete');
+
+        Role::findOrFail($id)->delete();
+
+        Session::flash('success', 'Role successfully deleted');
+        return redirect(route('roles.index'));
     }
 }

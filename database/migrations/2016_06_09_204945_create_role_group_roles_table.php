@@ -20,8 +20,6 @@ class CreateRoleGroupRolesTable extends Migration
             $table->foreign('role_group_id')->references('id')->on('role_groups');
             $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestampTz('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestampTz('deleted_at')->nullable();
-            $table->index('deleted_at');
             $table->unique(['role_id', 'role_group_id']);
         });
     }

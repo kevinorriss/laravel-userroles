@@ -2,6 +2,7 @@
 
 namespace KevinOrriss\UserRoles\Models;
 
+use InvalidArguementException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -12,19 +13,6 @@ class Role extends Model
      * the deleted_at column has the current time set
      */
     use SoftDeletes;
-
-    /**
-     * The validation rules for a Role instance
-     */
-    const RULES = [
-        'name' => 'bail|required|min:3|max:20|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name',
-        'description' => 'bail|required|min:10'];
-
-    /**
-     * Custom messages for certain validation checks
-     */
-    const MESSAGES = [
-        'name.regex' => 'Name can contain only lower case a-z seperated by single underscores'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -49,7 +37,7 @@ class Role extends Model
     public function roleGroups()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')
-            ->whereNull('role_group_roles.deleted_at');
+            ->withTimestamps();
     }
 
     /**
@@ -61,6 +49,42 @@ class Role extends Model
     public function users()
     {
         return $this->belongsToMany(config('userroles.user_model'), 'user_roles', 'role_id', 'user_id')
-            ->whereNull('user_roles.deleted_at');
+            ->withTimestamps();
+    }
+
+    /**
+     * Returns an array of validation rules used for the Role model. If an id
+     * of a Role is passed, then any unique constraint will be ignored for the
+     * given id. Used for updates.
+     *
+     * @param int|NULL $id
+     *
+     * @throws InvalidArguementException
+     *
+     * @return string[]
+     */
+    public static function rules($id=NULL)
+    {
+        if (!is_null($id) && !is_int($id))
+        {
+            throw new InvalidArguementException('Param [$id] is expected to be NULL or an Integer');
+        }
+
+        return [
+            'name' => 'bail|required|min:3|max:20|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name' . (!is_null($id) ? ",".$id : ""),
+            'description' => 'bail|required|min:10'];
+    }
+
+    /**
+     * Returns an array of validation messages to use on failure.
+     * These are custom messages. This array is not a class constant
+     * purely for uniform code when used with the rules() function.
+     *
+     * @return string[]
+     */
+    public static function messages()
+    {
+        return [
+            'name.regex' => 'Name can contain only lower case a-z seperated by single underscores'];
     }
 }

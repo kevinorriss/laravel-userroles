@@ -37,7 +37,7 @@ class RoleGroup extends Model
     public function roles()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'role_group_roles', 'role_group_id', 'role_id')
-            ->whereNull('role_group_roles.deleted_at');
+            ->withTimestamps();
     }
 
     /**
@@ -78,7 +78,7 @@ class RoleGroup extends Model
     public function users()
     {
         return $this->belongsToMany(config('userroles.user_model'), 'user_role_groups', 'role_group_id', 'user_id')
-            ->whereNull('user_role_groups.deleted_at');
+            ->withTimestamps()
     }
 
     /**
@@ -90,7 +90,7 @@ class RoleGroup extends Model
     public function parents()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'sub_role_group_id', 'role_group_id')
-            ->whereNull('role_group_groups.deleted_at');
+            ->withTimestamps()
     }
 
     /**
@@ -102,7 +102,7 @@ class RoleGroup extends Model
     public function children()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'role_group_id', 'sub_role_group_id')
-            ->whereNull('role_group_groups.deleted_at');
+            ->withTimestamps()
     }
 
     /**
