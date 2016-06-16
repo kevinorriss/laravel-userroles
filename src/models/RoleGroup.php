@@ -22,13 +22,6 @@ class RoleGroup extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * The format of dates for this model
-     *
-     * @var string
-     */
-    protected $dateFormat = 'Y-m-d H:i:sO';
-
-    /**
      * Returns the Role objects that belong to this RoleGroup.
      * This is not recursive
      *
@@ -78,7 +71,7 @@ class RoleGroup extends Model
     public function users()
     {
         return $this->belongsToMany(config('userroles.user_model'), 'user_role_groups', 'role_group_id', 'user_id')
-            ->withTimestamps()
+            ->withTimestamps();
     }
 
     /**
@@ -90,7 +83,7 @@ class RoleGroup extends Model
     public function parents()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'sub_role_group_id', 'role_group_id')
-            ->withTimestamps()
+            ->withTimestamps();
     }
 
     /**
@@ -102,7 +95,7 @@ class RoleGroup extends Model
     public function children()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_groups', 'role_group_id', 'sub_role_group_id')
-            ->withTimestamps()
+            ->withTimestamps();
     }
 
     /**

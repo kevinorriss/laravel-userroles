@@ -22,13 +22,6 @@ class Role extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * The format of dates for this model
-     *
-     * @var string
-     */
-    protected $dateFormat = 'Y-m-d H:i:sO';
-
-    /**
      * Returns the RoleGroup objects that this Role belongs to.
      * This is not recursive
      *

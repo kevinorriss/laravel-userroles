@@ -16,10 +16,8 @@ class CreateRoleGroupsTable extends Migration
             $table->increments('id');
             $table->text('name')->unique();
             $table->text('description');
-            $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestampTz('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestampTz('deleted_at')->nullable();
-            $table->index('deleted_at');
+            $table->timestamps();
+            $table->softDeletes();
         });
 
         if (DB::connection()->getDriverName() == 'pgsql')
