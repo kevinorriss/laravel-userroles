@@ -28,8 +28,10 @@ class CreateRoleGroupsTable extends Migration
         }
 
         DB::table('role_groups')->insert([
-            ['name' => 'role_browser',    'description' => 'Can browse the roles'],
-            ['name' => 'role_admin',        'description' => 'Can do administrative tasks on the roles']
+            ['name' => 'role_browser',       'description' => 'Can browse the roles'],
+            ['name' => 'role_admin',         'description' => 'Can do administrative tasks on the roles'],
+            ['name' => 'role_group_browser', 'description' => 'Can browse the role groups'],
+            ['name' => 'role_group_admin',   'description' => 'Can do administrative tasks on the role groups']
         ]);
     }
 

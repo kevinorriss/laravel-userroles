@@ -32,13 +32,24 @@ class CreateRolesTable extends Migration
             ['name' => 'role_browse',       'description' => 'Browse the roles'],
             ['name' => 'role_create',       'description' => 'Create a new role'],
             ['name' => 'role_edit',         'description' => 'Edit an existing role'],
-            ['name' => 'role_delete',       'description' => 'Soft-delete an existing role'],
+            ['name' => 'role_delete',       'description' => 'Soft delete an existing role'],
             ['name' => 'role_restore',      'description' => 'Restore a soft-deleted role'],
             ['name' => 'role_destroy',      'description' => 'Delete an existing role from the database'],
             ['name' => 'role_assign_user',  'description' => 'Assign a role to a user'],
             ['name' => 'role_assign_group', 'description' => 'Assign a role to a role group'],
             ['name' => 'role_revoke_user',  'description' => 'Revoke a role from a user'],
-            ['name' => 'role_revoke_group', 'description' => 'Revoke a role from a group']
+            ['name' => 'role_revoke_group', 'description' => 'Revoke a role from a group'],
+            
+            ['name' => 'role_group_browse',       'description' => 'Browse the role groups'],
+            ['name' => 'role_group_create',       'description' => 'Create a new role group'],
+            ['name' => 'role_group_edit',         'description' => 'Edit an existing role group'],
+            ['name' => 'role_group_delete',       'description' => 'Soft delete an existing role group'],
+            ['name' => 'role_group_restore',      'description' => 'Restore a soft deleted role group'],
+            ['name' => 'role_group_destroy',      'description' => 'Delete an existing role group from the database'],
+            ['name' => 'role_group_assign_user',  'description' => 'Assign a role group to a user'],
+            ['name' => 'role_group_assign_group', 'description' => 'Assign a role group to a role group'],
+            ['name' => 'role_group_revoke_user',  'description' => 'Revoke a role group from a user'],
+            ['name' => 'role_group_revoke_group', 'description' => 'Revoke a role group from a role group']
         ]);
     }
 

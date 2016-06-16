@@ -24,8 +24,11 @@ class CreateRoleGroupRolesTable extends Migration
             $table->unique(['role_id', 'role_group_id']);
         });
 
+        // Role Browser
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
             'role_browse', 'role_browser']);
+
+        // Role Admin
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
             'role_create', 'role_admin']);
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
@@ -44,6 +47,30 @@ class CreateRoleGroupRolesTable extends Migration
             'role_revoke_user', 'role_admin']);
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
             'role_revoke_group', 'role_admin']);
+
+        // Role Group Browser
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_browse', 'role_group_browser']);
+
+        // Role Group Admin
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_create', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_edit', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_delete', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_restore', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_destroy', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_assign_user', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_assign_group', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_revoke_user', 'role_group_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
+            'role_group_revoke_group', 'role_group_admin']);
     }
 
     /**
