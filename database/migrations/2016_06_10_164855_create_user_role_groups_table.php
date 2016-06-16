@@ -18,9 +18,9 @@ class CreateUserRoleGroupsTable extends Migration
             $table->foreign('user_id')->references(config('userroles.user_column'))->on(config('userroles.user_table'));
             $table->integer('role_group_id');
             $table->foreign('role_group_id')->references('id')->on('role_groups');
-            $table->timestampTz('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestampTz('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestampTz('deleted_at')->nullable();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('deleted_at')->nullable();
             $table->unique(['user_id', 'role_group_id']);
         });
     }
