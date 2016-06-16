@@ -72,6 +72,9 @@ class CreateRoleGroupGroupsTable extends Migration
                 "CREATE CONSTRAINT TRIGGER role_group_groups_after_insert_update AFTER INSERT OR UPDATE ON role_group_groups DEFERRABLE INITIALLY IMMEDIATE
                     FOR EACH ROW EXECUTE PROCEDURE role_group_groups_infinite_loop_check()");
         }
+
+        DB::insert("INSERT INTO role_group_groups (role_group_id, sub_role_group_id) SELECT (SELECT id FROM role_groups WHERE name='?'), (SELECT id FROM role_groups WHERE name='?')", [
+            'role_admin', 'role_browser']);
     }
 
     /**

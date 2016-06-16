@@ -26,6 +26,11 @@ class CreateRoleGroupsTable extends Migration
             DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
             DB::statement('ALTER TABLE role_groups ADD CONSTRAINT description_length CHECK (length(description) > 10)');
         }
+
+        DB::table('role_groups')->insert([
+            ['name' => 'role_browser',    'description' => 'Can browse the roles'],
+            ['name' => 'role_admin',        'description' => 'Can do administrative tasks on the roles']
+        ]);
     }
 
     /**

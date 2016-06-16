@@ -27,6 +27,19 @@ class CreateRolesTable extends Migration
             DB::statement('ALTER TABLE roles ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
             DB::statement('ALTER TABLE roles ADD CONSTRAINT description_length CHECK (length(description) > 10)');
         }
+
+        DB::table('roles')->insert([
+            ['name' => 'role_browse',       'description' => 'Browse the roles'],
+            ['name' => 'role_create',       'description' => 'Create a new role'],
+            ['name' => 'role_edit',         'description' => 'Edit an existing role'],
+            ['name' => 'role_delete',       'description' => 'Soft-delete an existing role'],
+            ['name' => 'role_restore',      'description' => 'Restore a soft-deleted role'],
+            ['name' => 'role_destroy',      'description' => 'Delete an existing role from the database'],
+            ['name' => 'role_assign_user',  'description' => 'Assign a role to a user'],
+            ['name' => 'role_assign_group', 'description' => 'Assign a role to a role group'],
+            ['name' => 'role_revoke_user',  'description' => 'Revoke a role from a user'],
+            ['name' => 'role_revoke_group', 'description' => 'Revoke a role from a group']
+        ]);
     }
 
     /**

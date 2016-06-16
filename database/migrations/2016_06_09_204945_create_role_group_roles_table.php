@@ -23,6 +23,27 @@ class CreateRoleGroupRolesTable extends Migration
             $table->timestamp('deleted_at')->nullable();
             $table->unique(['role_id', 'role_group_id']);
         });
+
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_browse', 'role_browser']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_create', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_edit', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_delete', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_restore', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_destroy', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_assign_user', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_assign_group', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_revoke_user', 'role_admin']);
+        DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name='?'), (SELECT id FROM role_group WHERE name='?')", [
+            'role_revoke_group', 'role_admin']);
     }
 
     /**
