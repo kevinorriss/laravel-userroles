@@ -30,6 +30,7 @@ class Role extends Model
     public function roleGroups()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')
+            ->whereNull('role_group_roles.deleted_at')
             ->withTimestamps();
     }
 
@@ -42,6 +43,7 @@ class Role extends Model
     public function users()
     {
         return $this->belongsToMany(config('userroles.user_model'), 'user_roles', 'role_id', 'user_id')
+            ->whereNull('user_roles.deleted_at')
             ->withTimestamps();
     }
 
