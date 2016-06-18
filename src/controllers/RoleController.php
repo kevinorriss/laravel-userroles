@@ -30,7 +30,7 @@ class RoleController extends Controller
         $col2_start = ceil($per_col);
         $col3_start = $col2_start + ceil($per_col);
 
-        // pass the variables to the view
+        // display the browse page
         return view('userroles.roles.browse')
             ->with('roles', $roles)
             ->with('count', $count)
@@ -47,6 +47,8 @@ class RoleController extends Controller
     public function create()
     {
         Auth::user()->checkRole('role_create');
+
+        // display the create page
         return view('userroles.roles.create');
     }
 
@@ -119,18 +121,20 @@ class RoleController extends Controller
     {
         Auth::user()->checkRole('role_edit');
 
-        $role = Role::findOrFail($id);
-        
+        // get the role and validate
+        $role = Role::findOrFail($id);        
         $validator = Validator::make($request->all(), Role::rules($role->id), Role::messages());
         if ($validator->fails())
         {
             return redirect(route('roles.edit'), $role->id)->withErrors($validator)->withInput();
         }
 
+        // save the changes
         $role->name = $request->input('name');
         $role->description = $request->input('description');
         $role->save();
 
+        // flash a success message and show the role
         Session::flash('success', 'Changes saved successfully');
         return redirect(route('roles.show', $role->id));
     }
@@ -145,8 +149,8 @@ class RoleController extends Controller
     {
         Auth::user()->checkRole('role_delete');
 
+        // delete the role and show the index page
         Role::findOrFail($id)->delete();
-
         Session::flash('success', 'Role successfully deleted');
         return redirect(route('roles.index'));
     }

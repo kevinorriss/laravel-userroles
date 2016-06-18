@@ -20,7 +20,6 @@ class CreateUserRolesTable extends Migration
             $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('deleted_at')->nullable();
             $table->unique(['user_id', 'role_id']);
         });
     }

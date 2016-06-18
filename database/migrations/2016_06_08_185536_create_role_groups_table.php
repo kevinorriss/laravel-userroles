@@ -23,6 +23,7 @@ class CreateRoleGroupsTable extends Migration
 
         if (DB::connection()->getDriverName() == 'pgsql')
         {
+            DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_length CHECk(length(name) BETWEEN 3 AND 50)');
             DB::statement('ALTER TABLE role_groups ADD CONSTRAINT name_format CHECK(name ~ \'^[a-z]+(_[a-z]+)*$\')');
             DB::statement('ALTER TABLE role_groups ADD CONSTRAINT description_length CHECK (length(description) > 10)');
         }

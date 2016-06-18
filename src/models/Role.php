@@ -30,7 +30,6 @@ class Role extends Model
     public function roleGroups()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'role_group_roles', 'role_id', 'role_group_id')
-            ->whereNull('role_group_roles.deleted_at')
             ->withTimestamps();
     }
 
@@ -43,7 +42,6 @@ class Role extends Model
     public function users()
     {
         return $this->belongsToMany(config('userroles.user_model'), 'user_roles', 'role_id', 'user_id')
-            ->whereNull('user_roles.deleted_at')
             ->withTimestamps();
     }
 
@@ -66,7 +64,7 @@ class Role extends Model
         }
 
         return [
-            'name' => 'bail|required|min:3|max:20|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name' . (!is_null($id) ? ",".$id : ""),
+            'name' => 'bail|required|min:3|max:50|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name' . (!is_null($id) ? ",".$id : ""),
             'description' => 'bail|required|min:10'];
     }
 
