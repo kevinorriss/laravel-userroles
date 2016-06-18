@@ -24,8 +24,7 @@ trait RoleUser
      */
     protected function roles()
     {
-        return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'user_roles', 'user_id', 'role_id')
-            ->whereNull('user_roles.deleted_at');
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
 
     /**
@@ -36,8 +35,7 @@ trait RoleUser
      */
     protected function roleGroups()
     {
-    	return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'user_role_groups', 'user_id', 'role_group_id')
-            ->whereNull('user_role_groups.deleted_at');
+    	return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'user_role_groups', 'user_id', 'role_group_id');
     }
 
     /**
