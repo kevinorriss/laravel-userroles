@@ -20,6 +20,7 @@ class RoleController extends Controller
      */
     public function index()
     {
+        // ensure the user can browse roles
         Auth::user()->checkRole('role_browse');
 
         // get the roles and calculate column row numbers
@@ -31,7 +32,7 @@ class RoleController extends Controller
         $col3_start = $col2_start + ceil($per_col);
 
         // display the browse page
-        return view('userroles.roles.browse')
+        return view('userroles::default.role_browse')
             ->with('roles', $roles)
             ->with('count', $count)
             ->with('col1_start', $col1_start)
@@ -46,6 +47,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        // ensure the user can create roles
         Auth::user()->checkRole('role_create');
 
         // display the create page

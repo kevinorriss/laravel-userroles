@@ -18,6 +18,9 @@ class UserRolesServiceProvider extends ServiceProvider
 
         // configuration
         $this->publishes([__DIR__.'/../config/userroles.php' => config_path('userroles.php')], 'config');
+
+        // views
+        $this->loadViewsFrom(__DIR__.'/views', 'userroles');
     }
 
     /**
