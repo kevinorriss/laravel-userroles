@@ -65,18 +65,19 @@ class RoleController extends Controller
         // ensure the user can create roles
         Auth::user()->checkRole('role_create');
 
-        // validate the request
-        $validator = Validator::make($request->all(), Role::rules(), Role::messages());
-        if ($validator->fails())
-        {
-            return redirect(route('roles.create'))->withErrors($validator)->withInput();
-        }
-
         // check if this role had been soft-deleted
         $role = Role::withTrashed()
             ->where('name', $request->input('name'))
             ->first();
 
+        // validate the request
+        $validator = Validator::make($request->all(), Role::rules(is_null($role) ? NULL : $role->id), Role::messages());
+        if ($validator->fails())
+        {
+            return redirect(route('roles.create'))->withErrors($validator)->withInput();
+        }
+
+        // if the role name is new
         if (is_null($role))
         {
             // create and save the role
@@ -87,6 +88,7 @@ class RoleController extends Controller
         }
         else
         {
+            // restore the soft-deleted role of the same name
             $role->name = $request->input('name');
             $role->description = $request->input('description');
             $role->restore();
