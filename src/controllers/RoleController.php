@@ -96,7 +96,7 @@ class RoleController extends Controller
 
         // get the role and display
         $role = Role::findOrFail($id);
-        return view('userroles.roles.show')->with('role', $role);
+        return view('userroles::role_show')->with('role', $role);
     }
 
     /**
@@ -112,7 +112,7 @@ class RoleController extends Controller
 
         // get the role and display
         $role = Role::findOrFail($id);
-        return view('userroles.roles.edit')->with('role', $role);
+        return view('userroles::role_edit')->with('role', $role);
     }
 
     /**
