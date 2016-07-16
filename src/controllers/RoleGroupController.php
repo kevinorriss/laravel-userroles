@@ -22,6 +22,7 @@ class RoleGroupController extends Controller
      */
     public function index()
     {
+        // ensure the user can browse role groups
         Auth::user()->checkRole('role_group_browse');
 
         // get the roles and calculate column row numbers
@@ -33,7 +34,7 @@ class RoleGroupController extends Controller
         $col3_start = $col2_start + ceil($per_col);
 
         // display browse page
-        return view('userroles.role_groups.browse')
+        return view('userroles::role_group_browse')
             ->with('role_groups', $role_groups)
             ->with('count', $count)
             ->with('col1_start', $col1_start)
@@ -48,10 +49,11 @@ class RoleGroupController extends Controller
      */
     public function create()
     {
+        // ensure the user can create role groups
         Auth::user()->checkRole('role_group_create');
 
         // display the create page
-        return view('userroles.role_groups.create');
+        return view('userroles::role_group_create');
     }
 
     /**
@@ -62,6 +64,7 @@ class RoleGroupController extends Controller
      */
     public function store(Request $request)
     {
+        // ensure the user can create role groups
         Auth::user()->checkRole('role_group_create');
 
         // validate the request
@@ -90,13 +93,14 @@ class RoleGroupController extends Controller
      */
     public function show($id)
     {
+        // ensure the user can browse role groups
         Auth::user()->checkRole('role_group_browse');
 
         // get the role group and display
         $role_group = RoleGroup::findOrFail($id);
         $roles = $role_group->roles()->orderBy('name', 'asc')->get();
         $sub_groups = $role_group->children()->orderBy('name', 'asc')->get();
-        return view('userroles.role_groups.show')
+        return view('userroles::role_group_show')
             ->with('role_group', $role_group)
             ->with('roles', $roles)
             ->with('sub_groups', $sub_groups);
@@ -110,6 +114,7 @@ class RoleGroupController extends Controller
      */
     public function edit($id)
     {
+        // ensure the user can edit role groups
         Auth::user()->checkRole('role_group_edit');
 
         // get the role group being edited, and every role/role group
@@ -134,7 +139,7 @@ class RoleGroupController extends Controller
         }
 
         // display the edit page
-        return view('userroles.role_groups.edit')
+        return view('userroles::role_group_edit')
             ->with('role_group', $role_group)
             ->with('roles', $roles)
             ->with('selected_roles', $selected_roles)
@@ -151,6 +156,7 @@ class RoleGroupController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // ensure the user can edit role groups
         Auth::user()->checkRole('role_group_edit');
 
         // get role group and validate
@@ -196,6 +202,7 @@ class RoleGroupController extends Controller
      */
     public function destroy($id)
     {
+        // ensure the user can delete role groups
         Auth::user()->checkRole('role_group_delete');
 
         // delete the role group and return to index
