@@ -72,11 +72,25 @@ class RoleController extends Controller
             return redirect(route('roles.create'))->withErrors($validator)->withInput();
         }
 
-        // create and save the role
-        $role = new Role;
-        $role->name = $request->input('name');
-        $role->description = $request->input('description');
-        $role->save();
+        // check if this role had been soft-deleted
+        $role = Role::withTrashed()
+            ->where('name', $request->input('name'))
+            ->first();
+
+        if (is_null($role))
+        {
+            // create and save the role
+            $role = new Role;
+            $role->name = $request->input('name');
+            $role->description = $request->input('description');
+            $role->save();
+        }
+        else
+        {
+            $role->name = $request->input('name');
+            $role->description = $request->input('description');
+            $role->restore();
+        }
 
         // flash a success message and redirect to the roles.index route
         Session::flash('success', "Role " . $role->name . " created successfully");

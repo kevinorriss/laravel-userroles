@@ -30,10 +30,10 @@
 	    <div class="row">
 	        <div class="col-md-8 col-md-offset-2">
 	        	<ul class="nav nav-tabs">
-					<li {!! Request::is("roles") ? 'class="active"' : '' !!}>
+					<li {!! Request::is('roles', 'roles/*') ? 'class="active"' : '' !!}>
 						<a href="{!! route('roles.index') !!}">Roles</a>
 					</li>
-					<li {!! Request::is("role_groups") ? 'class="active"' : '' !!}>
+					<li {!! Request::is('role_groups', 'role_groups/*') ? 'class="active"' : '' !!}>
 						<a href="{!! route('role_groups.index') !!}">Role Groups</a>
 					</li>
 				</ul>
