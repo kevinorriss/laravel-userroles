@@ -32,7 +32,7 @@ class RoleController extends Controller
         $col3_start = $col2_start + ceil($per_col);
 
         // display the browse page
-        return view('userroles::default.role_browse')
+        return view('userroles::role_browse')
             ->with('roles', $roles)
             ->with('count', $count)
             ->with('col1_start', $col1_start)
@@ -51,7 +51,7 @@ class RoleController extends Controller
         Auth::user()->checkRole('role_create');
 
         // display the create page
-        return view('userroles.roles.create');
+        return view('userroles::role_create');
     }
 
     /**
@@ -62,6 +62,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        // ensure the user can create roles
         Auth::user()->checkRole('role_create');
 
         // validate the request
@@ -90,6 +91,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        // ensure the user can browse roles
         Auth::user()->checkRole('role_browse');
 
         // get the role and display
@@ -105,6 +107,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        // ensure the user can edit roles
         Auth::user()->checkRole('role_edit');
 
         // get the role and display
@@ -121,6 +124,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // ensure the user can edit roles
         Auth::user()->checkRole('role_edit');
 
         // get the role and validate
@@ -149,6 +153,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        // ensure the user can delete roles
         Auth::user()->checkRole('role_delete');
 
         // delete the role and show the index page
