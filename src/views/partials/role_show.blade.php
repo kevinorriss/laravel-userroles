@@ -1,7 +1,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-
             @if (Session::has('success'))
                 <div class="alert alert-success">
                     <span>{{ Session::get('success') }}</span>

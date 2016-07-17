@@ -10,7 +10,6 @@
                 <div class="panel-heading">Edit Role Group</div>
                 <div class="panel-body">
                     {!! Form::open(['url' => route('role_groups.update', $role_group->id), 'method' => 'PUT', 'class' => 'form-horizontal', 'role' => 'form']) !!}
-
                         <!-- Name -->
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             {!! Form::label('name', 'Name', ['class' => 'col-md-4 control-label text-primary']) !!}
@@ -23,7 +22,6 @@
                                 @endif
                             </div>
                         </div>
-
                         <!-- Description -->
                         <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                             {!! Form::label('description', 'Description', ['class' => 'col-md-4 control-label text-primary']) !!}
@@ -36,7 +34,6 @@
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group">
                             {!! Form::label('roles', 'Roles', ['class' => 'col-md-4 control-label text-primary']) !!}
                             <div class="col-md-8">
@@ -50,7 +47,6 @@
                                 @endforeach
                             </div>
                         </div>
-
                         <div class="form-group">
                             {!! Form::label('sub_groups', 'Role Groups', ['class' => 'col-md-4 control-label text-primary']) !!}
                             <div class="col-md-8">
@@ -64,9 +60,7 @@
                                 @endforeach
                             </div>
                         </div>
-
                         <hr/>
-
                         <!-- Submit / Forgot -->
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
@@ -77,7 +71,6 @@
                                 <a class="btn btn-default" href="{{ route('role_groups.show', $role_group->id) }}">Cancel</a>
                             </div>
                         </div>
-
                     {!! Form::close() !!}
                 </div>
             </div>
