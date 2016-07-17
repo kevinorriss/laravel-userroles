@@ -67,18 +67,34 @@ class RoleGroupController extends Controller
         // ensure the user can create role groups
         Auth::user()->checkRole('role_group_create');
 
+        // check if this role group had been soft-deleted
+        $role_group = RoleGroup::withTrashed()
+            ->where('name', $request->input('name'))
+            ->first();
+
         // validate the request
-        $validator = Validator::make($request->all(), RoleGroup::rules(), RoleGroup::messages());
+        $validator = Validator::make($request->all(), RoleGroup::rules(is_null($role_group) ? NULL : $role_group->id), RoleGroup::messages());
         if ($validator->fails())
         {
             return redirect(route('role_groups.create'))->withErrors($validator)->withInput();
         }
 
-        // create and save the role group
-        $role_group = new RoleGroup;
-        $role_group->name = $request->input('name');
-        $role_group->description = $request->input('description');
-        $role_group->save();
+        // if the role group name is new
+        if (is_null($role_group))
+        {
+            // create and save the role group
+            $role_group = new RoleGroup;
+            $role_group->name = $request->input('name');
+            $role_group->description = $request->input('description');
+            $role_group->save();
+        }
+        else
+        {
+            // restore the soft-deleted role of the same name
+            $role_group->name = $request->input('name');
+            $role_group->description = $request->input('description');
+            $role_group->restore();
+        }
 
         // flash a success message and redirect to the roles.index route
         Session::flash('success', "Role Group " . $role_group->name . " created successfully");

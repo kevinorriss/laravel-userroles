@@ -144,7 +144,7 @@ class RoleController extends Controller
         Auth::user()->checkRole('role_edit');
 
         // get the role and validate
-        $role = Role::findOrFail($id);        
+        $role = Role::findOrFail($id);
         $validator = Validator::make($request->all(), Role::rules($role->id), Role::messages());
         if ($validator->fails())
         {
