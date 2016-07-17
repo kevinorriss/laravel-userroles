@@ -1,6 +1,6 @@
 <?php
 
-namespace KevinOrriss\UserRoles;
+namespace KevinOrriss\UserRoles\Models;
 
 use InvalidArgumentException;
 use KevinOrriss\UserRoles\Models\Role;
