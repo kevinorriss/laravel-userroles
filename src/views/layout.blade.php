@@ -36,7 +36,9 @@
 					<li {!! Request::is('role_groups', 'role_groups/*') ? 'class="active"' : '' !!}>
 						<a href="{!! route('role_groups.index') !!}">Role Groups</a>
 					</li>
-					<li class="disabled{!! Request::is('user_roles', 'user_roles/*') ? ' active' : '' !!}">User Roles</li>
+					<li class="disabled{!! Request::is('user_roles', 'user_roles/*') ? ' active' : '' !!}">
+						<a>User Roles</a>
+					</li>
 				</ul>
 	        </div>
 		</div>
