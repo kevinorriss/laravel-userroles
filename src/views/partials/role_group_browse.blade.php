@@ -15,21 +15,27 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
-                            @for ($i = $col1_start; $i < $col2_start; $i++)
-                                <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                            @endfor
-                        </div>
-                        <div class="col-sm-4">
-                            @for ($i = $col2_start; $i < $col3_start; $i++)
-                                <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                            @endfor
-                        </div>
-                        <div class="col-sm-4">
-                            @for ($i = $col3_start; $i < $count; $i++)
-                                <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                            @endfor
-                        </div>
+                        @if ($count == 0)
+                            <div class="col-md-12">
+                                <p class="text-center">There are no role groups created</p>
+                            </div>
+                        @else
+                            <div class="col-sm-4">
+                                @for ($i = $col1_start; $i < min($col2_start, $count); $i++)
+                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
+                                @endfor
+                            </div>
+                            <div class="col-sm-4">
+                                @for ($i = $col2_start; $i < min($col3_start, $count); $i++)
+                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
+                                @endfor
+                            </div>
+                            <div class="col-sm-4">
+                                @for ($i = $col3_start; $i < $count; $i++)
+                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
+                                @endfor
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
