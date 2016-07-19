@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use KevinOrriss\UserRoles\Models\RoleUser;
 
 class UserRoleController extends Controller
 {
@@ -17,7 +18,11 @@ class UserRoleController extends Controller
      */
     public function show($id)
     {
-        return "TODO: show";
+        $user = RoleUser::where(config('userroles.user_column'), $id)
+                ->firstOrFail();
+
+        return view('userroles::user_show')
+                ->with('user', $user);
     }
 
     /**
@@ -28,7 +33,7 @@ class UserRoleController extends Controller
      */
     public function edit($id)
     {
-        return "TODO: edit";
+        return view('userroles::user_edit');
     }
 
     /**
@@ -40,6 +45,6 @@ class UserRoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return "TODO: update";
+        return redirect(route('user_roles.show', $id));
     }
 }
