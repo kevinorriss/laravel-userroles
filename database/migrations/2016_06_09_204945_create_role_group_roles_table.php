@@ -61,7 +61,7 @@ class CreateRoleGroupRolesTable extends Migration
 
         // User Role Browser
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
-            'user_role_browser', 'user_role_browse']);
+            'user_role_browse', 'user_role_browser']);
 
         // User Role Admin
         DB::insert("INSERT INTO role_group_roles (role_id, role_group_id) SELECT (SELECT id FROM roles WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
