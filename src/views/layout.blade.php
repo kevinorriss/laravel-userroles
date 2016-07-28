@@ -6,7 +6,6 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 	<!-- Page title -->
 	<title>User Roles</title>
@@ -30,15 +29,24 @@
 	    <div class="row">
 	        <div class="col-md-8 col-md-offset-2">
 	        	<ul class="nav nav-tabs">
-					<li {!! Request::is('roles', 'roles/*') ? 'class="active"' : '' !!}>
-						<a href="{!! route('roles.index') !!}">Roles</a>
+	        		<li>
+						<a href="{!! url('/') !!}">Home</a>
 					</li>
-					<li {!! Request::is('role_groups', 'role_groups/*') ? 'class="active"' : '' !!}>
-						<a href="{!! route('role_groups.index') !!}">Role Groups</a>
-					</li>
-					<li class="disabled{!! Request::is('user_roles', 'user_roles/*') ? ' active' : '' !!}">
-						<a>User Roles</a>
-					</li>
+	        		@if (Auth::user()->hasRole('role_browse'))
+						<li {!! Request::is('roles', 'roles/*') ? 'class="active"' : '' !!}>
+							<a href="{!! route('roles.index') !!}">Roles</a>
+						</li>
+					@endif
+					@if (Auth::user()->hasRole('role_group_browse'))
+						<li {!! Request::is('role_groups', 'role_groups/*') ? 'class="active"' : '' !!}>
+							<a href="{!! route('role_groups.index') !!}">Role Groups</a>
+						</li>
+					@endif
+					@if (Auth::user()->hasRole('user_role_browse'))
+						<li {!! Request::is('user_roles', 'user_roles/*') ? 'class="active"' : '' !!}">
+							<a href="{!! route('user_roles.index') !!}">User Roles</a>
+						</li>
+					@endif
 				</ul>
 	        </div>
 		</div>

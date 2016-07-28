@@ -15,7 +15,7 @@ class CreateUserRoleGroupsTable extends Migration
         Schema::create('user_role_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->foreign('user_id')->references(config('userroles.user_column'))->on(config('userroles.user_table'));
+            $table->foreign('user_id')->references(config('userroles.user_id_column'))->on(config('userroles.user_table'));
             $table->integer('role_group_id');
             $table->foreign('role_group_id')->references('id')->on('role_groups');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

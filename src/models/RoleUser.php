@@ -23,7 +23,7 @@ trait RoleUser
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    protected function roles()
+    public function roles()
     {
         return $this->belongsToMany('KevinOrriss\UserRoles\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
@@ -34,7 +34,7 @@ trait RoleUser
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    protected function roleGroups()
+    public function roleGroups()
     {
     	return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'user_role_groups', 'user_id', 'role_group_id');
     }
@@ -168,20 +168,5 @@ trait RoleUser
         {
             App::abort(403, 'You do not have the permissions to complete this request.');
         }
-    }
-
-    public function displayName()
-    {
-        $variable_name = env('USERROLES_DISPLAY_NAME_VARIABLE');#
-
-        if (is_null($variable_name))
-        {
-            throw new Exception("Environment variable USERROLES_DISPLAY_NAME_VARIABLE not set");
-        }
-        else if (!property_exists(self, $variable_name))
-        {
-            throw new Exception("Property [" . $variable_name . "] does not exist in the class [" get_class(self) . "]");
-        }
-        return $this->$variable_name;
     }
 }
