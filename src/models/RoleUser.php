@@ -2,6 +2,7 @@
 
 namespace KevinOrriss\UserRoles\Models;
 
+use App;
 use Exception;
 use InvalidArgumentException;
 use KevinOrriss\UserRoles\Models\Role;
