@@ -87,6 +87,10 @@ class CreateRoleGroupGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('role_group_groups');
+        Schema::dropIfExists('role_group_groups');
+        if (DB::connection()->getDriverName() == 'pgsql')
+        {
+            DB::statement('DROP FUNCTION IF EXISTS role_group_groups_infinite_loop_check()');
+        }
     }
 }
