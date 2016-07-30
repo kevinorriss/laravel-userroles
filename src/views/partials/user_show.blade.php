@@ -1,6 +1,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
+            @if (Session::has('success'))
+                <div class="alert alert-success">
+                    <span>{{ Session::get('success') }}</span>
+                </div>
+            @endif
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $user->$user_name_column }}</div>
                 <div class="panel-body">
@@ -17,12 +22,11 @@
                     </p>
                     <p>
                         <strong class="text-primary">Role Groups</strong>
-                        <br/>
                         @if (count($role_groups) == 0)
-                            <span>There are no role groups directly assigned to this user</span>
+                            <br/><span>There are no role groups directly assigned to this user</span>
                         @else
                             @foreach($role_groups as $role_group)
-                                <a href="#" title="{{ $role_group->description }}">{{ $role_group->name }}</a>
+                                <br/><a href="#" title="{{ $role_group->description }}">{{ $role_group->name }}</a>
                             @endforeach
                         @endif
                     </p>
