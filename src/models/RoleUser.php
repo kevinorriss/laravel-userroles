@@ -18,7 +18,7 @@ trait RoleUser
      */
     protected $roles;
 
-	/**
+    /**
      * Returns the Role objects that have been directly assigned to this user
      * This is not recursive call, to get all roles a user has, use allRoles
      *
@@ -37,7 +37,7 @@ trait RoleUser
      */
     public function roleGroups()
     {
-    	return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'user_role_groups', 'user_id', 'role_group_id');
+        return $this->belongsToMany('KevinOrriss\UserRoles\Models\RoleGroup', 'user_role_groups', 'user_id', 'role_group_id');
     }
 
     /**
@@ -88,12 +88,13 @@ trait RoleUser
      * the sub RoleUser RoleGroups.
      *
      * @param string | string[] | Role | Role[] $role
+     * @param string $match
      *
      * @throws InvalidArgumentException
      *
      * @return boolean
      */
-    public function hasRole($role)
+    public function hasRole($role, $match = 'all')
     {
         $names = array();
 
@@ -132,18 +133,54 @@ trait RoleUser
         // remove duplicates
         $names = array_unique($names);
 
+        // if the match type param is not a string
+        if (!is_string($match))
+        {
+            throw new InvalidArgumentException('Parameter [$match] must be a string with a value of "all" or "any"');
+        }
+
+        // convert the match to lower case
+        $match = strtolower($match);
+
+        // check the value is acceptable
+        if (!in_array($match, ['any', 'all']))
+        {
+            throw new InvalidArgumentException('Parameter [$match] must have a value of "all" or "any"');
+        }
+
         // get roles if havent already
         if (is_null($this->roles))
         {
             $this->loadRoles();
         }
 
-        // search for the role names
+        // store the number of found roles
+        $count = 0;
+
+        // search for the role names and keep a count of the matches
         foreach($names as $name)
         {
-            if (array_key_exists($name, $this->roles)) { return TRUE; }
+            if (array_key_exists($name, $this->roles))
+            {
+                $count++;
+            }
         }
-        return FALSE;
+
+        // if we are matching all roles
+        if ($match == 'all')
+        {
+            // ensure the match count is the same as the number of role names provided
+            return $count == count($names);
+        }
+        // if matching any role
+        else if ($match == 'any')
+        {
+            // check wqe found at least one role
+            return $count > 0;
+        }
+
+        // unreachable code (theoretically)
+        throw new Exception('Unhandled match type');
     }
 
     /**
@@ -156,18 +193,12 @@ trait RoleUser
      *
      * @return void
      */
-    public function checkRole($role)
+    public function checkRole($role, $match = 'all')
     {
-        // validate the parameter
-        if (!is_string($role))
-        {
-            throw new InvalidArgumentException('Parameter [$role] must be a string of the role name');
-        }
-
         // display a 403 page if the user does not have the given role
-        if (!$this->hasRole($role))
+        if (!$this->hasRole($role, $match))
         {
-            App::abort(403, 'You do not have the permissions to complete this request.');
+            App::abort(403);
         }
     }
 }
