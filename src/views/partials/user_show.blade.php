@@ -16,7 +16,7 @@
                             <span>There are no roles directly assigned to this user</span>
                         @else
                             @foreach($roles as $role)
-                                <a href="#" title="{{ $role->description }}">{{ $role->name }}</a>
+                                <a href="{{ route('roles.show', $role->id) }}" title="{{ $role->description }}">{{ $role->name }}</a>
                             @endforeach
                         @endif
                     </p>
@@ -26,7 +26,7 @@
                             <br/><span>There are no role groups directly assigned to this user</span>
                         @else
                             @foreach($role_groups as $role_group)
-                                <br/><a href="#" title="{{ $role_group->description }}">{{ $role_group->name }}</a>
+                                <br/><a href="{{ route('role_groups.show', $role_group->id) }}" title="{{ $role_group->description }}">{{ $role_group->name }}</a>
                             @endforeach
                         @endif
                     </p>
