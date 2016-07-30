@@ -6,7 +6,7 @@
                     <span>{{ Session::get('error') }}</span>
                 </div>
             @endif
-        	<div class="panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading">Edit Role Group</div>
                 <div class="panel-body">
                     {!! Form::open(['url' => route('role_groups.update', $role_group->id), 'method' => 'PUT', 'class' => 'form-horizontal', 'role' => 'form']) !!}
@@ -34,32 +34,36 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group">
-                            {!! Form::label('roles', 'Roles', ['class' => 'col-md-4 control-label text-primary']) !!}
-                            <div class="col-md-8">
-                                @foreach($roles as $role)
-                                    <div class="checkbox">
-                                        <label title="{{ $role->description }}">
-                                            {{Form::checkbox('roles[]', $role->id, old('roles.' . $role->id, in_array($role->id, $selected_roles ?? array())))}}
-                                            {{ $role->name }}
-                                        </label>
-                                    </div>
-                                @endforeach
+                        @if (Auth::user()->hasRole('role_assign_group'))
+                            <div class="form-group">
+                                {!! Form::label('roles', 'Roles', ['class' => 'col-md-4 control-label text-primary']) !!}
+                                <div class="col-md-8">
+                                    @foreach($roles as $role)
+                                        <div class="checkbox">
+                                            <label title="{{ $role->description }}">
+                                                {{Form::checkbox('roles[]', $role->id, old('roles.' . $role->id, $role_group_roles->contains($role))) }}
+                                                {{ $role->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            {!! Form::label('sub_groups', 'Role Groups', ['class' => 'col-md-4 control-label text-primary']) !!}
-                            <div class="col-md-8">
-                                @foreach($sub_groups as $sub_group)
-                                    <div class="checkbox">
-                                        <label title="{{ $sub_group->description }}">
-                                            {{Form::checkbox('sub_groups[]', $sub_group->id, old('sub_groups.' . $sub_group->id, in_array($sub_group->id, $selected_sub_groups ?? array())), [$sub_group->id == $role_group->id ? "disabled" : ""])}}
-                                            {{ $sub_group->name }}
-                                        </label>
-                                    </div>
-                                @endforeach
+                        @endif
+                        @if (Auth::user()->hasRole('role_group_assign_group'))
+                            <div class="form-group">
+                                {!! Form::label('sub_groups', 'Role Groups', ['class' => 'col-md-4 control-label text-primary']) !!}
+                                <div class="col-md-8">
+                                    @foreach($role_groups as $sub_group)
+                                        <div class="checkbox">
+                                            <label title="{{ $sub_group->description }}">
+                                                {{Form::checkbox('sub_groups[]', $sub_group->id, old('sub_groups.' . $sub_group->id, $role_group_groups->contains($sub_group)), [$sub_group->id == $role_group->id ? "disabled" : ""]) }}
+                                                {{ $sub_group->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         <hr/>
                         <!-- Submit / Forgot -->
                         <div class="form-group">

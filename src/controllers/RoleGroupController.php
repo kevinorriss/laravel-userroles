@@ -136,31 +136,19 @@ class RoleGroupController extends Controller
         // get the role group being edited, and every role/role group
         $role_group = RoleGroup::findOrFail($id);
         $roles = Role::orderBy('name', 'asc')->get();
-        $sub_groups = RoleGroup::orderBy('name', 'asc')->get();
+        $role_groups = RoleGroup::orderBy('name', 'asc')->get();
 
-        // get the IDs of the role groups assigned roles
-        $selected_role_objects = $role_group->roles()->get();
-        $selected_roles = array();
-        foreach($selected_role_objects as $selected_role_object)
-        {
-            $selected_roles[] = $selected_role_object->id;
-        }
-
-        // get the IDs of the role groups sub role groups
-        $selected_sub_group_objects = $role_group->children()->get();
-        $selected_sub_groups = array();
-        foreach($selected_sub_group_objects as $selected_sub_group_object)
-        {
-            $selected_sub_groups[] = $selected_sub_group_object->id;
-        }
+        // get the roles and sub role groups for this role group
+        $role_group_roles = $role_group->roles()->get();
+        $role_group_groups = $role_group->children()->get();
 
         // display the edit page
         return view('userroles::role_group_edit')
             ->with('role_group', $role_group)
             ->with('roles', $roles)
-            ->with('selected_roles', $selected_roles)
-            ->with('sub_groups', $sub_groups)
-            ->with('selected_sub_groups', $selected_sub_groups);
+            ->with('role_groups', $role_groups)
+            ->with('role_group_roles', $role_group_roles)
+            ->with('role_group_groups', $role_group_groups);
     }
 
     /**
@@ -196,8 +184,14 @@ class RoleGroupController extends Controller
         $role_group->save();
         try
         {
-            $role_group->roles()->sync($request->input('roles') ?? array());
-            $role_group->children()->sync($request->input('sub_groups') ?? array());
+            if (Auth::user()->hasRole('role_assign_group'))
+            {
+                $role_group->roles()->sync($request->input('roles') ?? array());
+            }
+            if (Auth::user()->hasRole('role_group_assign_group'))
+            {
+                $role_group->children()->sync($request->input('sub_groups') ?? array());
+            }
         }
         catch (QueryException $e)
         {

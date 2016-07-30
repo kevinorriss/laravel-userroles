@@ -44,6 +44,12 @@ class UserRoleController extends Controller
             ->with('col3_start', $col3_start);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
         // ensure the user can browse user roles
@@ -65,6 +71,12 @@ class UserRoleController extends Controller
             ->with('user_id_column', $user_id_column);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         // ensure the user can assign a role or role group to a user
@@ -90,6 +102,13 @@ class UserRoleController extends Controller
             ->with('role_groups', $role_groups);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
         // ensure the user can assign a role or role group to a user
