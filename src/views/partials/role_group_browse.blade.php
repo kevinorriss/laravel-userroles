@@ -15,26 +15,25 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        @if ($count == 0)
+                        @if (count($role_groups) == 0)
                             <div class="col-md-12">
                                 <p class="text-center">There are no role groups created</p>
                             </div>
                         @else
-                            <div class="col-sm-4">
-                                @for ($i = $col1_start; $i < min($col2_start, $count); $i++)
-                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                                @endfor
-                            </div>
-                            <div class="col-sm-4">
-                                @for ($i = $col2_start; $i < min($col3_start, $count); $i++)
-                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                                @endfor
-                            </div>
-                            <div class="col-sm-4">
-                                @for ($i = $col3_start; $i < $count; $i++)
-                                    <p><a href="{{ route('role_groups.show', $role_groups[$i]->id) }}" title="{{ $role_groups[$i]->description }}">{{ $role_groups[$i]->name }}</a></p>
-                                @endfor
-                            </div>
+                            @foreach($role_groups as $role_group)
+
+                                @if ($role_group->trashed() && !Auth::user()->hasRole('role_group_restore'))
+                                    @continue
+                                @endif
+
+                                <div class="col-md-4">
+                                    <a class="{{ $role_group->trashed() ? 'text-danger' : '' }}"
+                                        href="{{ route('role_groups.show', $role_group->id) }}" 
+                                        title="{{ $role_group->description }}">
+                                        <p>{{ $role_group->name }}</p>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace KevinOrriss\UserRoles\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use Session;
@@ -25,21 +26,12 @@ class RoleGroupController extends Controller
         // ensure the user can browse role groups
         Auth::user()->checkRole('role_group_browse');
 
-        // get the roles and calculate column row numbers
-        $role_groups = RoleGroup::orderBy('name', 'asc')->get();
-        $count = count($role_groups);
-        $per_col = (float)$count/3.0;
-        $col1_start = 0;
-        $col2_start = ceil($per_col);
-        $col3_start = $col2_start + ceil($per_col);
+        // get the role groups, including deleted
+        $role_groups = RoleGroup::orderBy('name', 'asc')->withTrashed()->get();
 
         // display browse page
         return view('userroles::role_group_browse')
-            ->with('role_groups', $role_groups)
-            ->with('count', $count)
-            ->with('col1_start', $col1_start)
-            ->with('col2_start', $col2_start)
-            ->with('col3_start', $col3_start);
+            ->with('role_groups', $role_groups);
     }
 
     /**
@@ -52,8 +44,14 @@ class RoleGroupController extends Controller
         // ensure the user can create role groups
         Auth::user()->checkRole('role_group_create');
 
+        // get the current roles and role groups that can be assigned
+        $roles = Role::orderBy('name', 'asc')->get();
+        $role_groups = RoleGroup::orderBy('name', 'asc')->get();
+
         // display the create page
-        return view('userroles::role_group_create');
+        return view('userroles::role_group_create')
+            ->with('roles', $roles)
+            ->with('role_groups', $role_groups);
     }
 
     /**
@@ -67,33 +65,34 @@ class RoleGroupController extends Controller
         // ensure the user can create role groups
         Auth::user()->checkRole('role_group_create');
 
-        // check if this role group had been soft-deleted
-        $role_group = RoleGroup::withTrashed()
-            ->where('name', $request->input('name'))
-            ->first();
-
         // validate the request
-        $validator = Validator::make($request->all(), RoleGroup::rules(is_null($role_group) ? NULL : $role_group->id), RoleGroup::messages());
+        $validator = Validator::make($request->all(), RoleGroup::rules(), RoleGroup::messages());
         if ($validator->fails())
         {
             return redirect(route('role_groups.create'))->withErrors($validator)->withInput();
         }
 
-        // if the role group name is new
-        if (is_null($role_group))
+        // create and save the role group
+        $role_group = new RoleGroup;
+        $role_group->name = $request->input('name');
+        $role_group->description = $request->input('description');
+        $role_group->save();
+
+        try
         {
-            // create and save the role group
-            $role_group = new RoleGroup;
-            $role_group->name = $request->input('name');
-            $role_group->description = $request->input('description');
-            $role_group->save();
+            if (Auth::user()->hasRole('role_assign_group'))
+            {
+                $role_group->roles()->sync($request->input('roles') ?? array());
+            }
+            if (Auth::user()->hasRole('role_group_assign_group'))
+            {
+                $role_group->children()->sync($request->input('sub_groups') ?? array());
+            }
         }
-        else
+        catch (QueryException $e)
         {
-            // restore the soft-deleted role of the same name
-            $role_group->name = $request->input('name');
-            $role_group->description = $request->input('description');
-            $role_group->restore();
+            Session::flash('error', 'Infinite loops in role groups are not allowed');
+            return redirect(route('role_groups.create', $role_group->id))->withInput();
         }
 
         // flash a success message and redirect to the roles.index route
@@ -112,10 +111,20 @@ class RoleGroupController extends Controller
         // ensure the user can browse role groups
         Auth::user()->checkRole('role_group_browse');
 
-        // get the role group and display
-        $role_group = RoleGroup::findOrFail($id);
+        // get the role group
+        $role_group = RoleGroup::withTrashed()->findOrFail($id);
+
+        // if the role group is deleted and the user cannot restore it then fail
+        if ($role_group->trashed() && !Auth::user()->hasRole('role_group_restore'))
+        {
+            throw (new ModelNotFoundException)->setModel(get_class($role_group));
+        }
+
+        // get the roles and sub role groups for this role group
         $roles = $role_group->roles()->orderBy('name', 'asc')->get();
         $sub_groups = $role_group->children()->orderBy('name', 'asc')->get();
+
+        // display the view
         return view('userroles::role_group_show')
             ->with('role_group', $role_group)
             ->with('roles', $roles)

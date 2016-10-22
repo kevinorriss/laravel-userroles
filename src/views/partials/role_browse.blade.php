@@ -15,26 +15,25 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        @if ($count == 0)
+                        @if (count($roles) == 0)
                             <div class="col-md-12">
                                 <p class="text-center">There are no roles created</p>
                             </div>
                         @else
-                            <div class="col-sm-4">
-                                @for ($i = $col1_start; $i < min($col2_start, $count); $i++)
-                                    <p><a href="{{ route('roles.show', $roles[$i]->id) }}" title="{{ $roles[$i]->description }}">{{ $roles[$i]->name }}</a></p>
-                                @endfor
-                            </div>
-                            <div class="col-sm-4">
-                                @for ($i = $col2_start; $i < min($col3_start, $count); $i++)
-                                    <p><a href="{{ route('roles.show', $roles[$i]->id) }}" title="{{ $roles[$i]->description }}">{{ $roles[$i]->name }}</a></p>
-                                @endfor
-                            </div>
-                            <div class="col-sm-4">
-                                @for ($i = $col3_start; $i < $count; $i++)
-                                    <p><a href="{{ route('roles.show', $roles[$i]->id) }}" title="{{ $roles[$i]->description }}">{{ $roles[$i]->name }}</a></p>
-                                @endfor
-                            </div>
+                            @foreach ($roles as $role)
+                                
+                                @if ($role->trashed() && !Auth::user()->hasRole('role_restore'))
+                                    @continue
+                                @endif
+
+                                <div class="col-md-4">
+                                    <a class="{{ $role->trashed() ? 'text-danger' : '' }}"
+                                        href="{{ route('roles.show', $role->id) }}" 
+                                        title="{{ $role->description }}">
+                                        <p>{{ $role->name }}</p>
+                                    </a>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
                 </div>

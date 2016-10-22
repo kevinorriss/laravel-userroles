@@ -29,12 +29,7 @@ class CreateRoleGroupsTable extends Migration
         }
 
         DB::table('role_groups')->insert([
-            ['name' => 'role_browser',       'description' => 'Can browse the roles'],
-            ['name' => 'role_admin',         'description' => 'Can do administrative tasks on the roles'],
-            ['name' => 'role_group_browser', 'description' => 'Can browse the role groups'],
-            ['name' => 'role_group_admin',   'description' => 'Can do administrative tasks on the role groups'],
-            ['name' => 'user_role_browser',  'description' => 'Can browse the users and which roles/role groups they have'],
-            ['name' => 'user_role_admin',    'description' => 'Can assign and revoke roles/role groups from users']
+            ['name' => 'role_manager', 'description' => 'Can manage all aspects of the user roles'],
         ]);
     }
 
@@ -45,6 +40,6 @@ class CreateRoleGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_groups');
+        Schema::drop('role_groups');
     }
 }

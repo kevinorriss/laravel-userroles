@@ -3,7 +3,9 @@
 namespace KevinOrriss\UserRoles\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App;
 use Auth;
 use Session;
 use Validator;
@@ -23,21 +25,12 @@ class RoleController extends Controller
         // ensure the user can browse roles
         Auth::user()->checkRole('role_browse');
 
-        // get the roles and calculate column row numbers
-        $roles = Role::orderBy('name', 'asc')->get();
-        $count = count($roles);
-        $per_col = (float)$count/3.0;
-        $col1_start = 0;
-        $col2_start = ceil($per_col);
-        $col3_start = $col2_start + ceil($per_col);
+        // get all the roles, including deleted
+        $roles = Role::orderBy('name', 'asc')->withTrashed()->get();
 
         // display the browse page
         return view('userroles::role_browse')
-            ->with('roles', $roles)
-            ->with('count', $count)
-            ->with('col1_start', $col1_start)
-            ->with('col2_start', $col2_start)
-            ->with('col3_start', $col3_start);
+            ->with('roles', $roles);
     }
 
     /**
@@ -65,34 +58,18 @@ class RoleController extends Controller
         // ensure the user can create roles
         Auth::user()->checkRole('role_create');
 
-        // check if this role had been soft-deleted
-        $role = Role::withTrashed()
-            ->where('name', $request->input('name'))
-            ->first();
-
         // validate the request
-        $validator = Validator::make($request->all(), Role::rules(is_null($role) ? NULL : $role->id), Role::messages());
+        $validator = Validator::make($request->all(), Role::rules(), Role::messages());
         if ($validator->fails())
         {
             return redirect(route('roles.create'))->withErrors($validator)->withInput();
         }
 
-        // if the role name is new
-        if (is_null($role))
-        {
-            // create and save the role
-            $role = new Role;
-            $role->name = $request->input('name');
-            $role->description = $request->input('description');
-            $role->save();
-        }
-        else
-        {
-            // restore the soft-deleted role of the same name
-            $role->name = $request->input('name');
-            $role->description = $request->input('description');
-            $role->restore();
-        }
+        // create and save the role
+        $role = new Role;
+        $role->name = $request->input('name');
+        $role->description = $request->input('description');
+        $role->save();
 
         // flash a success message and redirect to the roles.index route
         Session::flash('success', "Role " . $role->name . " created successfully");
@@ -110,8 +87,16 @@ class RoleController extends Controller
         // ensure the user can browse roles
         Auth::user()->checkRole('role_browse');
 
-        // get the role and display
-        $role = Role::findOrFail($id);
+        // get the role
+        $role = Role::withTrashed()->findOrFail($id);
+
+        // if the role is deleted and the user cannot restore then fail
+        if ($role->trashed() && !Auth::user()->hasRole('role_restore'))
+        {
+            throw (new ModelNotFoundException)->setModel(get_class($role));
+        }
+
+        // display the role
         return view('userroles::role_show')->with('role', $role);
     }
 
@@ -126,8 +111,10 @@ class RoleController extends Controller
         // ensure the user can edit roles
         Auth::user()->checkRole('role_edit');
 
-        // get the role and display
+        // get the role
         $role = Role::findOrFail($id);
+
+        // display the role to edit
         return view('userroles::role_edit')->with('role', $role);
     }
 
@@ -140,15 +127,30 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // get the role
+        $role = Role::withTrashed()->findOrFail($id);
+
+        // if the role has been deleted, then restore it
+        if ($role->trashed())
+        {
+            // ensure the user can restore roles
+            Auth::user()->checkRole('role_restore');
+
+            // restore the role
+            $role->restore();
+
+            // flash a success message and show the role
+            Session::flash('success', 'Role successfully restored');
+            return redirect(route('roles.show', $role->id));
+        }
+
         // ensure the user can edit roles
         Auth::user()->checkRole('role_edit');
 
-        // get the role and validate
-        $role = Role::findOrFail($id);
         $validator = Validator::make($request->all(), Role::rules($role->id), Role::messages());
         if ($validator->fails())
         {
-            return redirect(route('roles.edit'), $role->id)->withErrors($validator)->withInput();
+            return redirect(route('roles.edit', $role->id))->withErrors($validator)->withInput();
         }
 
         // save the changes
@@ -169,6 +171,25 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        // get the role
+        $role = Role::withTrashed()->findOrFail($id);
+
+        // if destroying a soft-deleted role
+        if ($role->trashed())
+        {
+            // ensure the user can destroy roles
+            Auth::user()->checkRole('role_destroy');
+
+            // detatch all relations and delete the role
+            $role->roleGroups()->sync([]);
+            $role->users()->sync([]);
+            $role->forceDelete();
+
+            // display a success message on the role index page
+            Session::flash('success', 'Role successfully destroyed');
+            return redirect(route('roles.index'));
+        }
+
         // ensure the user can delete roles
         Auth::user()->checkRole('role_delete');
 

@@ -29,6 +29,36 @@
                                 @endif
                             </div>
                         </div>
+                        @if (Auth::user()->hasRole('role_assign_group'))
+                            <div class="form-group">
+                                {!! Form::label('roles', 'Roles', ['class' => 'col-md-4 control-label text-primary']) !!}
+                                <div class="col-md-8">
+                                    @foreach($roles as $role)
+                                        <div class="checkbox">
+                                            <label title="{{ $role->description }}">
+                                                {{Form::checkbox('roles[]', $role->id, old('roles.' . $role->id, FALSE)) }}
+                                                {{ $role->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        @if (Auth::user()->hasRole('role_group_assign_group'))
+                            <div class="form-group">
+                                {!! Form::label('sub_groups', 'Role Groups', ['class' => 'col-md-4 control-label text-primary']) !!}
+                                <div class="col-md-8">
+                                    @foreach($role_groups as $sub_group)
+                                        <div class="checkbox">
+                                            <label title="{{ $sub_group->description }}">
+                                                {{Form::checkbox('sub_groups[]', $sub_group->id, old('sub_groups.' . $sub_group->id, FALSE)) }}
+                                                {{ $sub_group->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                         <hr/>
                         <!-- Submit / Forgot -->
                         <div class="form-group">

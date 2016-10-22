@@ -71,13 +71,6 @@ class CreateRoleGroupGroupsTable extends Migration
                 "CREATE CONSTRAINT TRIGGER role_group_groups_after_insert_update AFTER INSERT OR UPDATE ON role_group_groups DEFERRABLE INITIALLY IMMEDIATE
                     FOR EACH ROW EXECUTE PROCEDURE role_group_groups_infinite_loop_check()");
         }
-
-        DB::insert("INSERT INTO role_group_groups (role_group_id, sub_role_group_id) SELECT (SELECT id FROM role_groups WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
-            'role_admin', 'role_browser']);
-        DB::insert("INSERT INTO role_group_groups (role_group_id, sub_role_group_id) SELECT (SELECT id FROM role_groups WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
-            'role_group_admin', 'role_group_browser']);
-        DB::insert("INSERT INTO role_group_groups (role_group_id, sub_role_group_id) SELECT (SELECT id FROM role_groups WHERE name=?), (SELECT id FROM role_groups WHERE name=?)", [
-            'user_role_admin', 'user_role_browser']);
     }
 
     /**
@@ -87,7 +80,7 @@ class CreateRoleGroupGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_group_groups');
+        Schema::drop('role_group_groups');
         if (DB::connection()->getDriverName() == 'pgsql')
         {
             DB::statement('DROP FUNCTION IF EXISTS role_group_groups_infinite_loop_check()');

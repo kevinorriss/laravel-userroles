@@ -180,7 +180,7 @@ class RoleGroup extends Model
         }
 
         return [
-            'name' => 'bail|required|min:3|max:50|regex:#^[a-z]+(_[a-z]+)*$#|unique:roles,name' . (!is_null($id) ? ",".$id : ""),
+            'name' => 'bail|required|min:3|max:50|regex:#^[a-z]+(_[a-z]+)*$#|unique:role_groups,name' . (!is_null($id) ? ",".$id : ""),
             'description' => 'bail|required|min:10'];
     }
 
